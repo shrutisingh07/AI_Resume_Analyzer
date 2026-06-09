@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 from ats import extract_skills, calculate_ats
 
 # =========================
