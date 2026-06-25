@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from pypdf import PdfReader
 from ats import extract_skills, calculate_ats
+from skills import ROLE_SKILLS
 
 # =========================
 # PAGE CONFIG
@@ -68,10 +69,21 @@ if menu == "📄 Upload Resume":
         )
 
     with col2:
-        job_description = st.text_area(
-            "💼 Paste Job Description Here",
-            height=250
-        )
+     job_description = st.text_area(
+        "💼 Paste Job Description Here",
+        height=250
+    )
+
+    job_role = st.selectbox(
+        "🎯 Select Target Job Role",
+        [
+            "Data Analyst",
+            "Data Scientist",
+            "Machine Learning Engineer",
+            "AI Engineer",
+            "Software Engineer"
+        ]
+    )
 
     if uploaded_file is not None:
 
@@ -195,6 +207,128 @@ ATS Score: {ats_score}%
                 chart_data.set_index("Category")
             )
 
+            st.markdown("---")
+            st.subheader("🚀 Career Copilot Skill Gap Analysis")
+
+            required_skills = ROLE_SKILLS[job_role]
+
+            career_gaps = []
+
+            for skill in required_skills:
+                if skill.lower() not in resume_text.lower():
+                    career_gaps.append(skill)
+
+            if career_gaps:
+
+                st.warning(
+                    f"Skills needed for becoming a {job_role}"
+                )
+
+                for skill in career_gaps:
+                    st.write("❌", skill)
+
+            else:
+                st.success(
+                    f"Your resume already covers most skills required for {job_role}"
+                )
+
+            st.markdown("---")
+            st.subheader("🎤 AI Interview Question Generator")
+
+            interview_questions = {
+
+                "Data Analyst": [
+                    "Explain the difference between INNER JOIN and LEFT JOIN.",
+                    "What is the purpose of Pandas in Python?",
+                    "How would you handle missing data?"
+                ],
+
+                "Data Scientist": [
+                    "What is overfitting?",
+                    "Explain bias vs variance.",
+                    "What is cross-validation?"
+                ],
+
+                "Machine Learning Engineer": [
+                    "What is feature engineering?",
+                    "Explain Random Forest.",
+                    "What is model deployment?"
+                ],
+
+                "AI Engineer": [
+                    "What is NLP?",
+                    "Explain transformers and LLMs.",
+                    "What is prompt engineering?"
+                ],
+
+                "Software Engineer": [
+                    "Explain OOP concepts.",
+                    "What is time complexity?",
+                    "Difference between list and tuple?"
+                ]
+            }
+
+            for q in interview_questions[job_role]:
+                st.info(q)
+
+            st.markdown("---")
+            st.subheader("📚 Personalized Learning Roadmap")
+
+            if career_gaps:
+
+                st.info(
+                    f"Roadmap to become a {job_role}"
+                )
+
+                for i, skill in enumerate(career_gaps[:5], start=1):
+                    st.write(
+                        f"Week {i}: Learn {skill}"
+                    )
+
+            else:
+                st.success(
+                    "You already have most of the required skills for this role."
+                )
+
+            st.markdown("---")
+            st.subheader("🎯 Recommended Projects")
+
+            project_recommendations = {
+
+                "Data Analyst": [
+                    "Sales Dashboard using Power BI",
+                    "Customer Churn Analysis",
+                    "HR Analytics Dashboard"
+                ],
+
+                "Data Scientist": [
+                    "Customer Churn Prediction",
+                    "House Price Prediction",
+                    "Movie Recommendation System"
+                ],
+
+                "Machine Learning Engineer": [
+                    "MLOps Pipeline Project",
+                    "Fraud Detection System",
+                    "Predictive Maintenance System"
+                ],
+
+                "AI Engineer": [
+                    "AI Resume Analyzer",
+                    "Voice-to-SQL Query Generator",
+                    "Document Q&A Chatbot"
+                ],
+
+                "Software Engineer": [
+                    "Expense Tracker",
+                    "E-Commerce Website",
+                    "Task Management System"
+                ]
+            }
+
+            for project in project_recommendations[job_role]:
+                st.success(f"⭐ {project}")
+
             # AI Suggestions
             st.subheader("🤖 AI Suggestions")
 
@@ -245,7 +379,7 @@ ATS Score: {ats_score}%
 
             # Download Report
             report = f"""
-AI Resume Analyzer Report
+AI Career Copilot Report
 
 ATS Score: {ats_score}%
 
@@ -254,8 +388,13 @@ Skills Found:
 
 Missing Skills:
 {', '.join(missing_skills)}
-"""
 
+Target Role:
+{job_role}
+
+Skill Gaps:
+{', '.join(career_gaps)}
+"""
             st.download_button(
                 label="📄 Download ATS Report",
                 data=report,
@@ -266,7 +405,7 @@ Missing Skills:
     st.markdown("---")
     st.caption(
         "Built with Python, NLP and Streamlit | Created by Shruti Singh"
-    )
+    ) 
 
 # =========================
 # RECENT ANALYSES
