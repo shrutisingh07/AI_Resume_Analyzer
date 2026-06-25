@@ -9,7 +9,7 @@ from skills import ROLE_SKILLS
 # =========================
 
 st.set_page_config(
-    page_title="AI Resume Analyzer",
+    page_title="AI Career Copilot",
     page_icon="🤖",
     layout="wide"
 )
@@ -27,7 +27,7 @@ except:
 # SIDEBAR
 # =========================
 
-st.sidebar.title("🤖 AI Resume Analyzer")
+st.sidebar.title("AI Career Copilot")
 
 menu = st.sidebar.radio(
     "Navigation",
